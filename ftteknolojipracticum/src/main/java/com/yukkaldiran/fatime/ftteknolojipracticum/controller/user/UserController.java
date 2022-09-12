@@ -3,9 +3,7 @@ package com.yukkaldiran.fatime.ftteknolojipracticum.controller.user;
 import com.yukkaldiran.fatime.ftteknolojipracticum.dto.user.UserDto;
 import com.yukkaldiran.fatime.ftteknolojipracticum.dto.user.UserSaveRequestDto;
 import com.yukkaldiran.fatime.ftteknolojipracticum.dto.user.UserUpdateRequestDto;
-import com.yukkaldiran.fatime.ftteknolojipracticum.entity.user.User;
 import com.yukkaldiran.fatime.ftteknolojipracticum.service.user.UserService;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -41,9 +39,9 @@ public class UserController {
         return new ResponseEntity<>(userDto, HttpStatus.OK);
     }
 
-    @PutMapping(path = "/{userId}")
-    public ResponseEntity<UserDto> updateUser(@PathVariable Long userId, @Valid @RequestBody UserUpdateRequestDto updateUserRequest){
-        UserDto userDto = userService.updateUser(userId, updateUserRequest);
+    @PutMapping()
+    public ResponseEntity<UserDto> updateUser(@Valid @RequestBody UserUpdateRequestDto updateUserRequest){
+        UserDto userDto = userService.updateUser(updateUserRequest);
         return new ResponseEntity<>(userDto, HttpStatus.OK);
     }
 

@@ -1,7 +1,8 @@
 package com.yukkaldiran.fatime.ftteknolojipracticum.dto.converter;
 
-import antlr.collections.impl.LList;
+
 import com.yukkaldiran.fatime.ftteknolojipracticum.dto.product.ProductDto;
+import com.yukkaldiran.fatime.ftteknolojipracticum.dto.productcomment.ProductCommentDto;
 import com.yukkaldiran.fatime.ftteknolojipracticum.entity.product.Product;
 import org.springframework.stereotype.Component;
 
@@ -16,7 +17,18 @@ public class ProductConverter {
                 from.getId(),
                 from.getName(),
                 from.getPrice(),
-                from.getExpirationDate()
+                from.getExpirationDate(),
+                from.getProductComments()
+                        .stream()
+                        .map(c -> new ProductCommentDto(
+                                c.getId(),
+                                c.getComment(),
+                                c.getCommentDate(),
+                                c.getProduct(),
+                                c.getUser()
+
+                        ))
+                        .collect(Collectors.toList())
         );
     }
     public List<ProductDto> convertToProductDtoList(List<Product> products){

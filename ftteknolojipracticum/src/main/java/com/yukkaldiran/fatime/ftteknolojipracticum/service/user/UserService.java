@@ -2,14 +2,10 @@ package com.yukkaldiran.fatime.ftteknolojipracticum.service.user;
 
 import com.yukkaldiran.fatime.ftteknolojipracticum.dto.converter.UserConverter;
 import com.yukkaldiran.fatime.ftteknolojipracticum.dto.mapper.UserMapper;
-import com.yukkaldiran.fatime.ftteknolojipracticum.dto.product.ProductDto;
-import com.yukkaldiran.fatime.ftteknolojipracticum.dto.product.ProductUpdateRequestDto;
 import com.yukkaldiran.fatime.ftteknolojipracticum.dto.user.UserDto;
 import com.yukkaldiran.fatime.ftteknolojipracticum.dto.user.UserSaveRequestDto;
 import com.yukkaldiran.fatime.ftteknolojipracticum.dto.user.UserUpdateRequestDto;
-import com.yukkaldiran.fatime.ftteknolojipracticum.entity.product.Product;
 import com.yukkaldiran.fatime.ftteknolojipracticum.entity.user.User;
-import com.yukkaldiran.fatime.ftteknolojipracticum.exception.ProductNotFoundException;
 import com.yukkaldiran.fatime.ftteknolojipracticum.exception.UserNotFoundException;
 import com.yukkaldiran.fatime.ftteknolojipracticum.repository.user.UserRepository;
 import com.yukkaldiran.fatime.ftteknolojipracticum.utils.ErrorMessageConstants;
@@ -38,14 +34,14 @@ public class UserService {
         return userMapper.convertToUserDto(findUserById(userId));
     }
 
-    public UserDto updateUser(Long userId, UserUpdateRequestDto updateUserRequest){
-        User user = findUserById(userId);
+    public UserDto updateUser(UserUpdateRequestDto updateUserRequest){
+        User user = findUserById(updateUserRequest.getId());
 
         User updatedUser = new User(
                 user.getId(),
                 updateUserRequest.getName(),
                 updateUserRequest.getSurname(),
-                updateUserRequest.getEmailAddress(),
+                updateUserRequest.getEmail(),
                 updateUserRequest.getPhoneNumber(),
                 user.getProductComments()
         );

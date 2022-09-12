@@ -2,7 +2,6 @@ package com.yukkaldiran.fatime.ftteknolojipracticum.dto.converter;
 
 import com.yukkaldiran.fatime.ftteknolojipracticum.dto.product.ProductDto;
 import com.yukkaldiran.fatime.ftteknolojipracticum.dto.productcomment.ProductCommentDto;
-import com.yukkaldiran.fatime.ftteknolojipracticum.entity.product.Product;
 import com.yukkaldiran.fatime.ftteknolojipracticum.entity.productcomment.ProductComment;
 import org.springframework.stereotype.Component;
 
@@ -14,8 +13,12 @@ public class ProductCommentConverter {
 
     public ProductCommentDto convertToProductCommentDto(ProductComment from){
         return new ProductCommentDto(
+                from.getId(),
                 from.getComment(),
-                from.getCommentDate()
+                from.getCommentDate(),
+                from.getProduct(),
+                from.getUser()
+
         );
     }
     public List<ProductCommentDto> convertToProductCommentDtoList(List<ProductComment> comments){

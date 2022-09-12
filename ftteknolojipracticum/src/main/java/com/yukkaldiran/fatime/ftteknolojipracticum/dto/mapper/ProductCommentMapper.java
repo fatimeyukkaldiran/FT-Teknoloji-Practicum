@@ -7,5 +7,5 @@ import org.mapstruct.Mapper;
 @Mapper(componentModel = "spring")
 public interface ProductCommentMapper {
 
-    public ProductCommentDto convertToCommentDto(ProductComment comment);
+     ProductCommentDto convertToCommentDto(ProductComment comment);
 }

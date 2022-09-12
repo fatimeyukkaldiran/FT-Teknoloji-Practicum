@@ -41,7 +41,7 @@ public class User {
     @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY,
             cascade = CascadeType.ALL,
-            mappedBy = "userId")
+            mappedBy = "user")
     private Set<ProductComment> productComments;
 
 }

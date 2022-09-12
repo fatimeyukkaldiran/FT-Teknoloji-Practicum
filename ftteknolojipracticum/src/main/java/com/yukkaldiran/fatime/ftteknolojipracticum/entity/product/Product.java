@@ -34,7 +34,7 @@ public class Product {
     private LocalDate expirationDate;
 
     @JsonIgnore
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "productId")
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "product")
     private Set<ProductComment> productComments;
 
 }

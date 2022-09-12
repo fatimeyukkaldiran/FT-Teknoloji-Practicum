@@ -4,7 +4,6 @@ import com.yukkaldiran.fatime.ftteknolojipracticum.dto.product.ProductDto;
 import com.yukkaldiran.fatime.ftteknolojipracticum.dto.product.ProductSaveRequestDto;
 import com.yukkaldiran.fatime.ftteknolojipracticum.dto.product.ProductUpdateRequestDto;
 import com.yukkaldiran.fatime.ftteknolojipracticum.service.product.ProductService;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +21,7 @@ public class ProductController {
     private final ProductService productService;
 
     @PostMapping
-    public ResponseEntity<ProductDto> saveProduct(@RequestBody @Valid ProductSaveRequestDto productSaveRequestDto){
+    public ResponseEntity<ProductDto> saveProduct(@Valid @RequestBody ProductSaveRequestDto productSaveRequestDto){
         ProductDto productDto = productService.createProduct(productSaveRequestDto);
         return new ResponseEntity<>(productDto, HttpStatus.OK);
     }
@@ -34,7 +33,7 @@ public class ProductController {
     }
 
    @PutMapping(path = "/{productId}")
-   public ResponseEntity<ProductDto> updateProduct(@PathVariable Long productId, @RequestBody ProductUpdateRequestDto updateProductRequest){
+   public ResponseEntity<ProductDto> updateProduct(@PathVariable Long productId, @Valid @RequestBody ProductUpdateRequestDto updateProductRequest){
        ProductDto productDto = productService.updateProduct(productId, updateProductRequest);
        return new ResponseEntity<>(productDto, HttpStatus.OK);
    }
@@ -51,14 +50,14 @@ public class ProductController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
-    @GetMapping(path = "/?expired=true")
+    @GetMapping(path = "/expired")
     public ResponseEntity<List<ProductDto>> getExpiredProducts(){
         List<ProductDto> products = productService.getExpiredProducts();
 
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
 
-    @GetMapping(path = "/?expired=false")
+    @GetMapping(path = "/notExpired")
     public ResponseEntity<List<ProductDto>> getNullOrNonExpiredProducts(){
 
         List<ProductDto> products = productService.getNullOrNonExpiredProducts();

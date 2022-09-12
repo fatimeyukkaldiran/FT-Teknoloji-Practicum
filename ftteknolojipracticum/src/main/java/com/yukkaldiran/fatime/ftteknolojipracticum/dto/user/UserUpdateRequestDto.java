@@ -28,7 +28,7 @@ public class UserUpdateRequestDto {
 
     @Email
     @Size(max=50)
-    private String emailAddress;
+    private String email;
 
     @NotEmpty
     @NotNull

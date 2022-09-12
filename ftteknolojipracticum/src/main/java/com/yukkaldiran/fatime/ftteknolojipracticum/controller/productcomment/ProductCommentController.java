@@ -1,7 +1,11 @@
 package com.yukkaldiran.fatime.ftteknolojipracticum.controller.productcomment;
 
+import com.yukkaldiran.fatime.ftteknolojipracticum.dto.product.ProductDto;
+import com.yukkaldiran.fatime.ftteknolojipracticum.dto.product.ProductUpdateRequestDto;
 import com.yukkaldiran.fatime.ftteknolojipracticum.dto.productcomment.CommentSaveRequestDto;
+import com.yukkaldiran.fatime.ftteknolojipracticum.dto.productcomment.CommentUpdateRequestDto;
 import com.yukkaldiran.fatime.ftteknolojipracticum.dto.productcomment.ProductCommentDto;
+import com.yukkaldiran.fatime.ftteknolojipracticum.entity.productcomment.ProductComment;
 import com.yukkaldiran.fatime.ftteknolojipracticum.service.productcomment.ProductCommentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -24,42 +28,60 @@ public class ProductCommentController {
       List<ProductCommentDto> commentDtoList = commentService.getComments();
         return new ResponseEntity<>(commentDtoList, HttpStatus.OK);
     }
+    @GetMapping("/{commentId}")
+    public ResponseEntity<ProductCommentDto> getComment(@PathVariable Long commentId){
+        ProductCommentDto comment= commentService.getCommentById(commentId);
+        return new ResponseEntity<>(comment, HttpStatus.OK);
+    }
 
     @PostMapping()
     public ResponseEntity<ProductCommentDto> save(@Valid @RequestBody CommentSaveRequestDto saveRequestDto){
         ProductCommentDto commentDto = commentService.saveComment(saveRequestDto);
         return new ResponseEntity<>(commentDto, HttpStatus.OK);
     }
-    @GetMapping(path="/{productId}")
+    @GetMapping(path="/product/{productId}")
     public ResponseEntity<List<ProductCommentDto>> getAllProductComments(@PathVariable("productId") Long productId){
         List<ProductCommentDto> commentDtoList = commentService.getCommentsByProductId(productId);
         return new ResponseEntity<>(commentDtoList, HttpStatus.OK);
     }
 
-    @GetMapping(path="/{productId}/{from}/{to}")
+    @GetMapping(path="/product/{productId}/comments")
     public ResponseEntity<List<ProductCommentDto>> findByProductIdAndCommentDateBetween(
             @PathVariable("productId") Long productId,
-            @PathVariable(value = "from",required = true) String fromStr,
-            @PathVariable(value = "to",required = true) String toStr){
+            @RequestParam(value = "from",required = true) String fromStr,
+            @RequestParam(value = "to",required = true) String toStr){
 
-        List<ProductCommentDto> comments = commentService.getCommentsByProductIdAndBetweenTwoDates(productId, fromStr, toStr);
+        List<ProductCommentDto> comments = commentService.getCommentsByProductIdAndBetweenTwoDate(productId, fromStr, toStr);
         return new ResponseEntity<>(comments, HttpStatus.OK);
     }
 
-    @GetMapping(path="/{userId}/{from}/{to}")
+    @GetMapping(path="/user/{userId}/comments")
     public ResponseEntity<List<ProductCommentDto>> findByUserIdAndCommentDateBetween(
             @PathVariable("userId") Long userId,
-            @PathVariable(value = "from",required = true) String fromStr,
-            @PathVariable(value = "to",required = true) String toStr){
+            @RequestParam(value = "from",required = true) String fromStr,
+            @RequestParam(value = "to",required = true) String toStr){
 
-        List<ProductCommentDto> comments = commentService.getCommentsByUserIdAndBetweenTwoDates(userId, fromStr, toStr);
+        List<ProductCommentDto> comments = commentService.getCommentsByUserIdAndBetweenTwoDate(userId, fromStr, toStr);
         return new ResponseEntity<>(comments, HttpStatus.OK);
     }
 
-    @GetMapping(path="/{userId}")
+    @GetMapping(path="/user/{userId}")
     public ResponseEntity<List<ProductCommentDto>> findAllUserComments(@PathVariable("userId") Long userId){
         List<ProductCommentDto> commentDtoList = commentService.getCommentsByUserId(userId);
         return new ResponseEntity<>(commentDtoList, HttpStatus.OK);
     }
+
+    @PutMapping()
+    public ResponseEntity<ProductCommentDto> updateComment(@Valid @RequestBody CommentUpdateRequestDto updateCommentRequest){
+        ProductCommentDto commentDto = commentService.updateComment(updateCommentRequest);
+        return new ResponseEntity<>(commentDto, HttpStatus.OK);
+    }
+
+    @DeleteMapping(path="/{commentId}")
+    public ResponseEntity<String> deleteProduct(@PathVariable("commentId") Long commentId){
+        String result = commentService.deleteComment(commentId);
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
 
 }

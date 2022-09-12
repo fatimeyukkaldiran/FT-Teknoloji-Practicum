@@ -2,27 +2,27 @@ package com.yukkaldiran.fatime.ftteknolojipracticum.service.productcomment;
 
 import com.yukkaldiran.fatime.ftteknolojipracticum.dto.converter.ProductCommentConverter;
 import com.yukkaldiran.fatime.ftteknolojipracticum.dto.mapper.ProductCommentMapper;
+import com.yukkaldiran.fatime.ftteknolojipracticum.dto.product.ProductDto;
 import com.yukkaldiran.fatime.ftteknolojipracticum.dto.productcomment.CommentSaveRequestDto;
+import com.yukkaldiran.fatime.ftteknolojipracticum.dto.productcomment.CommentUpdateRequestDto;
 import com.yukkaldiran.fatime.ftteknolojipracticum.dto.productcomment.ProductCommentDto;
 import com.yukkaldiran.fatime.ftteknolojipracticum.entity.product.Product;
 import com.yukkaldiran.fatime.ftteknolojipracticum.entity.productcomment.ProductComment;
 import com.yukkaldiran.fatime.ftteknolojipracticum.entity.user.User;
-import com.yukkaldiran.fatime.ftteknolojipracticum.exception.ProductNotFoundException;
-import com.yukkaldiran.fatime.ftteknolojipracticum.repository.product.ProductRepository;
 import com.yukkaldiran.fatime.ftteknolojipracticum.repository.productcomment.ProductCommentRepository;
 import com.yukkaldiran.fatime.ftteknolojipracticum.service.product.ProductService;
 import com.yukkaldiran.fatime.ftteknolojipracticum.service.user.UserService;
-import com.yukkaldiran.fatime.ftteknolojipracticum.utils.ErrorMessageConstants;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class ProductCommentService {
-    private final ProductRepository productRepository;
+
     private final ProductCommentRepository commentRepository;
     private final ProductService productService;
     private final UserService userService;
@@ -41,7 +41,7 @@ public class ProductCommentService {
                 product,
                 user
         );
-        return mapper.convertToCommentDto(comment);
+        return mapper.convertToCommentDto(commentRepository.save(comment));
     }
 
     public List<ProductCommentDto> getComments() {
@@ -54,7 +54,7 @@ public class ProductCommentService {
         return converter.convertToProductCommentDtoList(comments);
     }
 
-    public List<ProductCommentDto> getCommentsByProductIdAndBetweenTwoDates(Long productId, String fromStr, String toStr) {
+    public List<ProductCommentDto> getCommentsByProductIdAndBetweenTwoDate(Long productId, String fromStr, String toStr) {
         LocalDate from = LocalDate.parse(fromStr);
         LocalDate to = LocalDate.parse(toStr);
         Product product = productService.findProductById(productId);
@@ -62,7 +62,8 @@ public class ProductCommentService {
         return converter.convertToProductCommentDtoList(comments);
 
     }
-    public List<ProductCommentDto> getCommentsByUserIdAndBetweenTwoDates(Long userId, String fromStr, String toStr) {
+    public List<ProductCommentDto> getCommentsByUserIdAndBetweenTwoDate(Long userId, String fromStr, String toStr) {
+
         LocalDate from = LocalDate.parse(fromStr);
         LocalDate to = LocalDate.parse(toStr);
         User user = userService.findUserById(userId);
@@ -75,5 +76,32 @@ public class ProductCommentService {
         User  user = userService.findUserById(userId);
         List<ProductComment> comments = commentRepository.findAllByUserId(user.getId());
         return converter.convertToProductCommentDtoList(comments);
+    }
+
+    public ProductCommentDto getCommentById(Long commentId){
+        return mapper.convertToCommentDto(findCommentById(commentId));
+
+    }
+    public ProductComment findCommentById(Long commentId) {
+        return commentRepository.findById(commentId)
+                .orElseThrow(() -> new RuntimeException("comment not found"));
+    }
+
+    public String deleteComment(Long commentId){
+        commentRepository.delete(findCommentById(commentId));
+        return commentId + " deleted ...";
+    }
+
+    public ProductCommentDto updateComment(CommentUpdateRequestDto updateCommentRequest) {
+        ProductComment comment = findCommentById(updateCommentRequest.getId());
+
+        ProductComment updatedComment = new ProductComment(
+                comment.getId(),
+                updateCommentRequest.getComment(),
+               comment.getCommentDate(),
+                comment.getProduct(),
+                comment.getUser()
+        );
+        return mapper.convertToCommentDto(commentRepository.save(updatedComment));
     }
 }
